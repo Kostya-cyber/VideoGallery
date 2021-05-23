@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { getDatabaseConnection } from './config/dbConnection'
 
-const PORT = 8081
+const PORT = 8080
 
 const app = express()
 
