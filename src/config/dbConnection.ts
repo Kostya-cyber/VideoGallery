@@ -1,12 +1,12 @@
 import ORMConfig from './ormconfig'
 import { Connection, createConnection } from 'typeorm'
-
-let dbConnection: Connection
-createConnection(ORMConfig)
-	.then((connection) => {
-		dbConnection = connection
-		console.log(`connected database ${ORMConfig.database}`)
-	})
-	.catch(console.log)
-
-export const getDatabaseConnection = () => dbConnection
+export const getDatabaseConnection = async () => {
+	let dbConnection: Connection
+	try {
+		dbConnection = await createConnection(ORMConfig)
+		console.log(`connected to database ${ORMConfig.database}`)
+	} catch (err) {
+		console.log(err)
+	}
+	return dbConnection
+}
