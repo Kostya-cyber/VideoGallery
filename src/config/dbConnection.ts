@@ -1,6 +1,6 @@
 import ORMConfig from './ormconfig'
 import { Connection, createConnection } from 'typeorm'
-export const getDatabaseConnection = async () => {
+const getDatabaseConnection = async () => {
 	let dbConnection: Connection
 	try {
 		dbConnection = await createConnection(ORMConfig)
@@ -10,3 +10,8 @@ export const getDatabaseConnection = async () => {
 	}
 	return dbConnection
 }
+
+export let dbConnection: Connection
+(async () => {
+	dbConnection = await getDatabaseConnection()
+})()

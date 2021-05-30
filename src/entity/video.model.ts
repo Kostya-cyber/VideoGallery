@@ -7,7 +7,7 @@ export class Video {
 	id: string
 
 	@Column(`varchar`, { length: 255, nullable: false })
-	tittle_video: string
+	title_video: string
 
 	@OneToOne(() => Permission, (permission) => permission.video)
 	permission: Permission
