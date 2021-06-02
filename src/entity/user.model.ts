@@ -21,4 +21,8 @@ export class User {
 
 	@OneToMany(() => Permission, (permission) => permission.user)
 	permissions: Permission[]
+
+	constructor(user: Partial<User>) {
+		Object.assign(this, user)
+	}
 }
