@@ -1,10 +1,10 @@
-import { dbConnection } from '../config/dbConnection'
+import { dbManager } from '../config/dbConnection'
 import { User } from '../entity/user.model'
 
-export class UserController {
+class UserController {
 	async createUser(req, res) {
 		const { login, password } = req.body
-		const newUser = await dbConnection.manager
+		const newUser = await dbManager
 			.createQueryBuilder()
 			.insert()
 			.into(User)
@@ -14,7 +14,7 @@ export class UserController {
 		res.json(newUser)
 	}
 	async getUser(req, res) {
-		const user = await dbConnection.manager
+		const user = await dbManager
 			.createQueryBuilder()
 			.select(`user`)
 			.from(User, `user`)
@@ -25,7 +25,7 @@ export class UserController {
 		res.json(result)
 	}
 	async getUsers(req, res) {
-		const users = await dbConnection.manager
+		const users = await dbManager
 			.createQueryBuilder()
 			.select(`user`)
 			.from(User, `user`)
@@ -36,7 +36,7 @@ export class UserController {
 	}
 	async updateUser(req, res) {
 		const { login, password } = req.body
-		const user = await dbConnection.manager
+		const user = await dbManager
 			.createQueryBuilder()
 			.update(User)
 			.set({ login, password })
@@ -46,7 +46,7 @@ export class UserController {
 		res.json(user)
 	}
 	async deleteUser(req, res) {
-		const user = await dbConnection.manager
+		const user = await dbManager
 			.createQueryBuilder()
 			.delete()
 			.from(User)
@@ -56,3 +56,5 @@ export class UserController {
 		res.json(user)
 	}
 }
+
+export const userController = new UserController()

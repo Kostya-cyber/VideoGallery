@@ -1,10 +1,10 @@
-import { dbConnection } from '../config/dbConnection'
+import { dbManager } from '../config/dbConnection'
 import { Video } from '../entity/video.model'
 
-export class VideoController {
+class VideoController {
 	async createVideo(req, res) {
 		const { title_video } = req.body
-		const video = await dbConnection.manager
+		const video = await dbManager
 			.createQueryBuilder()
 			.insert()
 			.into(Video)
@@ -14,7 +14,7 @@ export class VideoController {
 		res.json(video)
 	}
 	async deleteVideo(req, res) {
-		const video = await dbConnection.manager
+		const video = await dbManager
 			.createQueryBuilder()
 			.delete()
 			.from(Video)
@@ -24,7 +24,7 @@ export class VideoController {
 		res.json(video)
 	}
 	async getVideo(req, res) {
-		const video = await dbConnection.manager
+		const video = await dbManager
 			.createQueryBuilder()
 			.select(`video`)
 			.from(Video, `video`)
@@ -34,7 +34,7 @@ export class VideoController {
 		res.json(video || { error: `no such video` })
 	}
 	async getVideos(req, res) {
-		const videos = await dbConnection.manager
+		const videos = await dbManager
 			.createQueryBuilder()
 			.select(`video`)
 			.from(Video, `video`)
@@ -44,3 +44,5 @@ export class VideoController {
 		res.json(result)
 	}
 }
+
+export const videoController = new VideoController()
