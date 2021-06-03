@@ -1,58 +1,28 @@
-import { dbManager } from '../config/dbConnection'
-import { User } from '../entity/user.model'
+import { userRepository } from '../repositories/user.repository'
+import { NotFoundError } from '../errors/NotFoundError'
 
 class UserController {
-	async createUser(req, res) {
-		const { login, password } = req.body
-		const newUser = await dbManager
-			.createQueryBuilder()
-			.insert()
-			.into(User)
-			.values({ login, password })
-			.execute()
-			.catch((err) => ({ error: err.detail }))
-		res.json(newUser)
-	}
-	async getUser(req, res) {
-		const user = await dbManager
-			.createQueryBuilder()
-			.select(`user`)
-			.from(User, `user`)
-			.where(`user.login = :login`, { login: req.params.login })
-			.getOne()
-			.catch((err) => ({ error: err.detail }))
-		const result = user || { error: `no such user` }
-		res.json(result)
-	}
-	async getUsers(req, res) {
-		const users = await dbManager
-			.createQueryBuilder()
-			.select(`user`)
-			.from(User, `user`)
-			.getMany()
-			.catch((err) => [{ error: err.detail }])
-		const result = users.length === 0 ? { error: `no users` } : users
-		res.json(result)
-	}
-	async updateUser(req, res) {
-		const { login, password } = req.body
-		const user = await dbManager
-			.createQueryBuilder()
-			.update(User)
-			.set({ login, password })
-			.where(`login = :login`, { login: req.params.login })
-			.execute()
-			.catch((err) => ({ error: err.detail }))
+	async getUser(req, res, next) {
+		const user = await userRepository.findByLogin(req.params.login)
+		if (!user) {
+			return next(new NotFoundError(`no such user`))
+		}
 		res.json(user)
 	}
+	async getUsers(req, res, next) {
+		const users = await userRepository.getAll()
+		if (users.length === 0) {
+			return next(new NotFoundError(`no users`))
+		}
+		res.json(users)
+	}
+	async updateUser(req, res) {
+		const user = req.body
+		const updateUser = await userRepository.update(user)
+		res.json(updateUser)
+	}
 	async deleteUser(req, res) {
-		const user = await dbManager
-			.createQueryBuilder()
-			.delete()
-			.from(User)
-			.where(`login = :login`, { login: req.params.login })
-			.execute()
-			.catch((err) => ({ error: err.detail }))
+		const user = await userRepository.delete(req.params.login)
 		res.json(user)
 	}
 }
