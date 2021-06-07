@@ -1,5 +1,5 @@
-import { dbManager } from '../config/dbConnection'
-import { Video } from '../entity/video.model'
+import { dbManager } from '../../config/dbConnection'
+import { Video } from './video.model'
 
 class VideoRepository {
 	async create(video: Partial<Video>) {
@@ -16,7 +16,7 @@ class VideoRepository {
 			.createQueryBuilder()
 			.delete()
 			.from(Video)
-			.where(`title_video = :title`, { title })
+			.where(`titleVideo = :title`, { title })
 			.execute()
 	}
 
@@ -25,7 +25,7 @@ class VideoRepository {
 			.createQueryBuilder()
 			.select(`video`)
 			.from(Video, `video`)
-			.where(`video.title_video = :title`, { title })
+			.where(`video.titleVideo = :title`, { title })
 			.getMany()
 	}
 

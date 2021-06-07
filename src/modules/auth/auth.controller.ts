@@ -1,19 +1,19 @@
 import * as bcryptjs from 'bcryptjs'
-import { InvalidPasswordError } from '../errors/InvalidPasswordError'
-import { NotFoundError } from '../errors/NotFoundError'
-import { ConflictError } from '../errors/ConflictError'
-import { userRepository } from '../repositories/user.repository'
-import { authService } from '../services/auth.service'
+import { ConflictError } from '../../errors/ConflictError'
+import { InvalidPasswordError } from '../../errors/InvalidPasswordError'
+import { NotFoundError } from '../../errors/NotFoundError'
+import { userRepository } from '../user/user.repository'
+import { authService } from './auth.service'
 
 class AuthController {
-	async authenticate(req, res, next) {
+	async authenticate(req, res) {
 		const user = req.body
 		const candidate = await userRepository.findByLogin(user.login)
 		if (!candidate) {
-			return next(new NotFoundError(`no such user`))
+			throw new NotFoundError(`no such user`)
 		}
 		if (!bcryptjs.compareSync(user.password, candidate.password)) {
-			return next(new InvalidPasswordError(`Invalid password`))
+			throw new InvalidPasswordError(`Invalid password`)
 		}
 		const token = authService.genToken(user)
 		res.json({ token })
@@ -22,7 +22,7 @@ class AuthController {
 		const user = req.body
 		const candidate = await userRepository.findByLogin(user.login)
 		if (candidate) {
-			return next(new ConflictError(`this email is alredy in use`))
+			throw new ConflictError(`this email is alredy in use`)
 		}
 		const newUser = authService.getUserWithHashPassword(user)
 		try {

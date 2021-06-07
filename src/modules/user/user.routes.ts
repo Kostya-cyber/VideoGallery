@@ -1,5 +1,5 @@
-import { userController } from '../controllers/user.controller'
 import { Router } from 'express'
+import { userController } from './user.controller'
 export const usersRouter = new Router()
 
 usersRouter.get(`/:login`, userController.getUser)

@@ -1,6 +1,6 @@
-import { User } from '../entity/user.model'
 import * as jwt from 'jsonwebtoken'
 import * as bcryptjs from 'bcryptjs'
+import { User } from '../user/user.model'
 
 class AuthService {
 	genToken(user: Partial<User>) {

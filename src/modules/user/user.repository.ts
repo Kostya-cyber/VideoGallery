@@ -1,5 +1,5 @@
-import { dbManager } from '../config/dbConnection'
-import { User } from '../entity/user.model'
+import { dbManager } from "../../config/dbConnection"
+import { User } from "./user.model"
 
 class UserRepository {
 	async findByLogin(login: string) {

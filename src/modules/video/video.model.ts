@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm'
-import { Permission } from './permission.model'
+import { Permission } from '../permission/permission.model'
 
 @Entity(`videos`)
 export class Video {
@@ -7,7 +7,7 @@ export class Video {
 	id: string
 
 	@Column(`varchar`, { length: 255, nullable: false })
-	title_video: string
+	titleVideo: string
 
 	@OneToOne(() => Permission, (permission) => permission.video)
 	permission: Permission

@@ -1,5 +1,5 @@
-import { NotFoundError } from '../errors/NotFoundError'
-import { videoRepository } from '../repositories/video.repository'
+import { NotFoundError } from '../../errors/NotFoundError'
+import { videoRepository } from './video.repository'
 
 class VideoController {
 	async createVideo(req, res) {

@@ -1,5 +1,5 @@
-import { userRepository } from '../repositories/user.repository'
-import { NotFoundError } from '../errors/NotFoundError'
+import { NotFoundError } from '../../errors/NotFoundError'
+import { userRepository } from './user.repository'
 
 class UserController {
 	async getUser(req, res, next) {

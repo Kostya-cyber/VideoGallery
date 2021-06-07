@@ -5,7 +5,7 @@ import {
 	Index,
 	OneToMany,
 } from 'typeorm'
-import { Permission } from './permission.model'
+import { Permission } from '../permission/permission.model'
 
 @Entity(`users`)
 export class User {

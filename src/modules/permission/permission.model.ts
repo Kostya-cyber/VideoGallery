@@ -1,14 +1,14 @@
 import { Entity, Column, ManyToOne, OneToOne, JoinColumn } from 'typeorm'
-import { User } from './user.model'
-import { Video } from './video.model'
+import { User } from '../user/user.model'
+import { Video } from '../video/video.model'
 
 @Entity(`permissions`)
 export class Permission {
 	@Column({ type: `varchar`, length: 3, nullable: false })
-	operation_type: string
+	operationType: string
 
 	@Column({ type: `boolean`, nullable: false })
-	full_access: boolean
+	fullAccess: boolean
 
 	@ManyToOne(() => User, (user) => user.permissions, { primary: true })
 	user: User

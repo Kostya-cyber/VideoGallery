@@ -1,9 +1,10 @@
 import * as express from 'express'
-import { usersRouter } from './routes/user.routes'
 import { json, urlencoded } from 'body-parser'
 import * as cors from 'cors'
-import { videoRouter } from './routes/video.routes'
-import { authRouter } from './routes/auth.routes'
+import { authRouter } from './modules/auth/auth.routes'
+import { usersRouter } from './modules/user/user.routes'
+import { videoRouter } from './modules/video/video.routes'
+import { errorHandler } from './middlewares/error.middleware'
 
 const PORT = 8080
 
@@ -17,9 +18,7 @@ app.use(`/auth`, authRouter)
 app.use(`/user`, usersRouter)
 app.use(`/video`, videoRouter)
 
-app.use((err, req, res, next) => {
-	res.json(err)
-})
+app.use(errorHandler)
 
 app.listen(PORT, () => {
 	console.log(`server started on port ${PORT}`)
