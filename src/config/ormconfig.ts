@@ -9,6 +9,6 @@ export default {
 	username: process.env.TYPEORM_USERNAME || `postgres`,
 	password: process.env.TYPEORM_PASSWORD || `postgres`,
 	database: process.env.TYPEORM_DATABASE || `node_project`,
-	entities: [__dirname + `/../modules/*/*.model.ts`],
 	synchronize: true,
+	entities: [__dirname + `/../modules/**/*.model.ts`],
 } as ConnectionOptions

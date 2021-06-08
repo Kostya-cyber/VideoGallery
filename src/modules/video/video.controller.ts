@@ -14,14 +14,14 @@ class VideoController {
 	async getVideo(req, res, next) {
 		const videos = await videoRepository.findByTitle(req.params.title_video)
 		if (videos.length === 0) {
-			return next(new NotFoundError(`no such video`))
+			throw new NotFoundError(`no such video`)
 		}
 		res.json(videos)
 	}
 	async getVideos(req, res, next) {
 		const videos = await videoRepository.getAll()
 		if (videos.length === 0) {
-			return next(new NotFoundError(`no such video`))
+			throw new NotFoundError(`no such video`)
 		}
 		res.json(videos)
 	}

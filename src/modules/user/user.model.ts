@@ -4,7 +4,9 @@ import {
 	Column,
 	Index,
 	OneToMany,
+	OneToOne,
 } from 'typeorm'
+import { RefreshSession } from '../auth/token.model'
 import { Permission } from '../permission/permission.model'
 
 @Entity(`users`)
@@ -21,6 +23,9 @@ export class User {
 
 	@OneToMany(() => Permission, (permission) => permission.user)
 	permissions: Permission[]
+
+	@OneToOne(() => RefreshSession, (refreshSession) => refreshSession.user)
+	refreshSession: RefreshSession
 
 	constructor(user: Partial<User>) {
 		Object.assign(this, user)

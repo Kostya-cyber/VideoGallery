@@ -17,3 +17,4 @@ export let dbManager
 	dbConnection = await getDatabaseConnection()
 	dbManager = dbConnection.manager
 })()
+
