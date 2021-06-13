@@ -4,10 +4,10 @@ import { User } from '../user/user.model'
 import { authRepository } from './auth.repository'
 import { RefreshSession } from './token.model'
 import { ConflictError } from '../../errors/ConflictError'
+import { NotFoundError } from '../../errors/NotFoundError'
 
 class AuthService {
 	createAccessToken(user: User) {
-		console.log()
 		return jwt.sign(
 			{
 				id: user.id,
@@ -47,6 +47,27 @@ class AuthService {
 			throw new ConflictError(`Token expired!`)
 		}
 		return token
+	}
+
+	async deleteTokenByRefreshToken(refreshToken) {
+		const refreshSession = await authRepository.getToken(refreshToken)
+		if (!refreshSession) {
+			throw new NotFoundError(`Unauthorized`)
+		}
+		await authRepository.deleteTokenByRefreshToken(refreshToken)
+	}
+
+	getAccessTokenByRefresh(token) {
+		const payload = jwt.verify(
+			token.refreshToken,
+			process.env.SECRET_REFRESH_JWT
+		)
+		const accessToken = jwt.sign(
+			{ user: payload },
+			process.env.SECRET_ACCESS_JWT,
+			{ expiresIn: process.env.JWT_ACCESS_TIME }
+		)
+		return accessToken
 	}
 }
 

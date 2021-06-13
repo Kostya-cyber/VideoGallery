@@ -1,6 +1,7 @@
 import * as bcryptjs from 'bcryptjs'
 import { InvalidPasswordError } from '../../errors/InvalidPasswordError'
 import { NotFoundError } from '../../errors/NotFoundError'
+import { User } from './user.model'
 import { userRepository } from './user.repository'
 
 class UserService {
@@ -17,6 +18,10 @@ class UserService {
 
 	async getUserByLogin(login: string) {
 		return await userRepository.findByLogin(login)
+	}
+
+	async saveUser(user: User){
+		await userRepository.save(user)
 	}
 }
 
