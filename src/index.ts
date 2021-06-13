@@ -8,6 +8,7 @@ import { usersRouter } from './modules/user/user.routes'
 import { videoRouter } from './modules/video/video.routes'
 import { permissionRouter } from './modules/permission/permission.routes'
 import { errorHandler } from './middlewares/error.middleware'
+import { logger } from './config/logger'
 
 const PORT = 8080
 
@@ -25,5 +26,5 @@ app.use(`/permission`, permissionRouter)
 app.use(errorHandler)
 
 app.listen(PORT, () => {
-	console.log(`server started on port ${PORT}`)
+	logger.info(`server started on port ${PORT}`)
 })
