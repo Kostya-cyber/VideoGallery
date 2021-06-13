@@ -1,30 +1,24 @@
-import { NotFoundError } from '../../errors/NotFoundError'
-import { videoRepository } from './video.repository'
+import { videoService } from './video.service'
 
 class VideoController {
 	async createVideo(req, res) {
-		// const video = req.body
-		// const newVideo = await videoRepository.create(video)
-		// res.json(newVideo)
-		res.json(req.file)
+		const file = req.file
+		const newVideo = await videoService.createVideo(file)
+		res.json({ success: true, newVideo })
 	}
 	async deleteVideo(req, res) {
-		const video = await videoRepository.delete(req.params.title_video)
-		res.json(video)
+		const video = await videoService.deleteVideoByFileName(req.params.fileName)
+		res.json({ success: true, video })
 	}
 	async getVideo(req, res) {
-		const videos = await videoRepository.findByTitle(req.params.title_video)
-		if (videos.length === 0) {
-			throw new NotFoundError(`no such video`)
-		}
-		res.json(videos)
+		const videos = await videoService.getVideosByOriginalName(
+			req.params.originalName
+		)
+		res.json({ success: true, videos })
 	}
 	async getVideos(req, res) {
-		const videos = await videoRepository.getAll()
-		if (videos.length === 0) {
-			throw new NotFoundError(`no such video`)
-		}
-		res.json(videos)
+		const videos = await videoService.getAllVideos()
+		res.json({ success: true, videos })
 	}
 }
 

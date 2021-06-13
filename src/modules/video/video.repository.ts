@@ -11,21 +11,21 @@ class VideoRepository {
 			.execute()
 	}
 
-	async delete(title: string) {
+	async delete(fileName: string) {
 		return await dbManager
 			.createQueryBuilder()
 			.delete()
 			.from(Video)
-			.where(`titleVideo = :title`, { title })
+			.where(`fileName = :fileName`, { fileName })
 			.execute()
 	}
 
-	async findByTitle(title: string) {
+	async findByOriginalName(originalName: string) {
 		return await dbManager
 			.createQueryBuilder()
 			.select(`video`)
 			.from(Video, `video`)
-			.where(`video.titleVideo = :title`, { title })
+			.where(`video.originalName = :originalName`, { originalName })
 			.getMany()
 	}
 

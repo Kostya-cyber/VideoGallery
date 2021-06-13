@@ -5,10 +5,10 @@ import { videoController } from './video.controller'
 export const videoRouter = new Router()
 
 videoRouter.get(`/`, wrapAsync(videoController.getVideos))
-videoRouter.get(`/:title`, wrapAsync(videoController.getVideo))
+videoRouter.get(`/:originalName`, wrapAsync(videoController.getVideo))
 videoRouter.post(
 	`/`,
 	upload.single(`video`),
 	wrapAsync(videoController.createVideo)
 )
-videoRouter.delete(`/:title`, wrapAsync(videoController.deleteVideo))
+videoRouter.delete(`/:fileName`, wrapAsync(videoController.deleteVideo))
