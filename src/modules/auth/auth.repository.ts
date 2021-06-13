@@ -15,7 +15,7 @@ class AuthRepository {
 			.createQueryBuilder()
 			.delete()
 			.from(RefreshSession)
-			.where(`refreshToken = :token`, { token: refreshToken })
+			.where(`refresh_token = :token`, { token: refreshToken })
 			.execute()
 	}
 }

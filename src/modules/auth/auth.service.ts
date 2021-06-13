@@ -13,7 +13,7 @@ class AuthService {
 				id: user.id,
 				login: user.login,
 			},
-			process.env.SECRET_ACCESS_JWT,
+			process.env.JWT_ACCESS_SECRET,
 			{ expiresIn: process.env.JWT_ACCESS_TIME }
 		)
 	}
@@ -23,7 +23,7 @@ class AuthService {
 				id: user.id,
 				login: user.login,
 			},
-			process.env.SECRET_REFRESH_JWT,
+			process.env.JWT_REFRESH_SECRET,
 			{
 				expiresIn: process.env.JWT_REFRESH_TIME,
 			}
@@ -60,11 +60,11 @@ class AuthService {
 	getAccessTokenByRefresh(token) {
 		const payload = jwt.verify(
 			token.refreshToken,
-			process.env.SECRET_REFRESH_JWT
+			process.env.JWT_REFRESH_SECRET
 		)
 		const accessToken = jwt.sign(
 			{ user: payload },
-			process.env.SECRET_ACCESS_JWT,
+			process.env.JWT_ACCESS_SECRET,
 			{ expiresIn: process.env.JWT_ACCESS_TIME }
 		)
 		return accessToken

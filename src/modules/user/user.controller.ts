@@ -9,7 +9,7 @@ class UserController {
 		}
 		res.json(user)
 	}
-	async getUsers(req, res, next) {
+	async getUsers(req, res) {
 		const users = await userRepository.getAll()
 		if (users.length === 0) {
 			throw new NotFoundError(`no users`)

@@ -16,7 +16,7 @@ class VideoRepository {
 			.createQueryBuilder()
 			.delete()
 			.from(Video)
-			.where(`fileName = :fileName`, { fileName })
+			.where(`file_name = :fileName`, { fileName })
 			.execute()
 	}
 
@@ -25,7 +25,7 @@ class VideoRepository {
 			.createQueryBuilder()
 			.select(`video`)
 			.from(Video, `video`)
-			.where(`video.originalName = :originalName`, { originalName })
+			.where(`video.original_name = :originalName`, { originalName })
 			.getMany()
 	}
 
