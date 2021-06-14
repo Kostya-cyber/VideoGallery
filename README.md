@@ -32,3 +32,6 @@ $ npm run dev
 
 # DrawSQL
 [database schema](https://drawsql.app/innowise-group-1/diagrams/videogallery)
+
+# Swagger
+Documentation: ```http://localhost:{PORT}/api-docs/```
