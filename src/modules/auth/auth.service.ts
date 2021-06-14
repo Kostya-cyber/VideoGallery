@@ -4,7 +4,7 @@ import { User } from '../user/user.model'
 import { authRepository } from './auth.repository'
 import { RefreshSession } from './token.model'
 import { ConflictError } from '../../errors/ConflictError'
-import { NotFoundError } from '../../errors/NotFoundError'
+import { UnauthorizedError } from '../../errors/UnauthorizedError'
 
 class AuthService {
 	createAccessToken(user: User) {
@@ -52,7 +52,7 @@ class AuthService {
 	async deleteTokenByRefreshToken(refreshToken) {
 		const refreshSession = await authRepository.getToken(refreshToken)
 		if (!refreshSession) {
-			throw new NotFoundError(`Unauthorized`)
+			throw new UnauthorizedError(`Unauthorized`)
 		}
 		await authRepository.deleteTokenByRefreshToken(refreshToken)
 	}

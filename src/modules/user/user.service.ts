@@ -1,6 +1,6 @@
 import * as bcryptjs from 'bcryptjs'
 import { ConflictError } from '../../errors/ConflictError'
-import { InvalidPasswordError } from '../../errors/InvalidPasswordError'
+import { UnauthorizedError } from '../../errors/UnauthorizedError'
 import { NotFoundError } from '../../errors/NotFoundError'
 import { authService } from '../auth/auth.service'
 import { User } from './user.model'
@@ -13,7 +13,7 @@ class UserService {
 			throw new NotFoundError(`no such user`)
 		}
 		if (!bcryptjs.compareSync(password, candidate.password)) {
-			throw new InvalidPasswordError(`Invalid password`)
+			throw new UnauthorizedError(`Invalid password`)
 		}
 		return candidate
 	}

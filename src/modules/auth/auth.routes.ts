@@ -33,6 +33,10 @@ export const authRouter = new Router()
  *     responses:
  *       200:
  *         description: Succes
+ *       404:
+ *         description: No such user
+ *       401:
+ *         description: Invalid password
  */
 authRouter.post(`/sign-in`, wrapAsync(authController.authenticate))
 /**
@@ -65,6 +69,8 @@ authRouter.post(`/sign-in`, wrapAsync(authController.authenticate))
  *     responses:
  *       200:
  *         description: Succes
+ *       409:
+ *         description: This email is alredy in use
  */
 authRouter.post(`/sign-up`, wrapAsync(authController.register))
 /**
@@ -94,6 +100,10 @@ authRouter.post(`/sign-up`, wrapAsync(authController.register))
  *     responses:
  *       200:
  *         description: Succes
+ *       404:
+ *         description: Access denied, token missing
+ *       409:
+ *         description: Token expired
  */
 authRouter.post(`/refresh-tokens`, wrapAsync(authController.refreshTokens))
 /**
@@ -123,5 +133,7 @@ authRouter.post(`/refresh-tokens`, wrapAsync(authController.refreshTokens))
  *     responses:
  *       200:
  *         description: Succes
+ *       401:
+ *         description: Unauthorized
  */
 authRouter.delete(`/logout`, wrapAsync(authController.logout))

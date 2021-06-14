@@ -22,6 +22,8 @@ export const usersRouter = new Router()
  *      responses:
  *          200:
  *              description: Success
+ *          404:
+ *              description: No such user
  */
 usersRouter.get(`/:login`, wrapAsync(userController.getUser))
 /**
@@ -38,6 +40,8 @@ usersRouter.get(`/:login`, wrapAsync(userController.getUser))
  *      responses:
  *          200:
  *              description: Success
+ *          404:
+ *              description: No users
  */
 usersRouter.get(`/`, wrapAsync(userController.getUsers))
 /**
@@ -75,6 +79,8 @@ usersRouter.get(`/`, wrapAsync(userController.getUsers))
  *      responses:
  *          200:
  *              description: Success
+ *          409:
+ *              description: This email is alredy in use
  */
 usersRouter.put(`/:login`, wrapAsync(userController.updateUser))
 /**

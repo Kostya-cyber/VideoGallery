@@ -12,7 +12,7 @@ class AuthController {
 		)
 		const accessToken = authService.createAccessToken(candidate)
 		const refreshToken = await authService.createRefreshToken(candidate)
-		res.status(200).json({ accessToken, refreshToken })
+		res.status(200).json({ success: true, accessToken, refreshToken })
 	}
 	async register(req, res) {
 		const user = req.body
@@ -24,23 +24,22 @@ class AuthController {
 		await userService.saveUser(newUser)
 		const accessToken = authService.createAccessToken(newUser)
 		const refreshToken = await authService.createRefreshToken(newUser)
-
-		res.json({ accessToken, refreshToken })
+		res.status(200).json({ success: true, accessToken, refreshToken })
 	}
 	async refreshTokens(req, res) {
 		const { refreshToken } = req.body
 		if (!refreshToken) {
-			throw new NotFoundError(`Access denied,token missing!`)
+			throw new NotFoundError(`Access denied, token missing!`)
 		}
 		const token = await authService.getTokenByRefreshToken(refreshToken)
 		const accessToken = authService.getAccessTokenByRefresh(token)
-		res.json({ accessToken })
+		res.status(200).json({ success: true, accessToken })
 	}
 
 	async logout(req, res) {
 		const { refreshToken } = req.body
 		await authService.deleteTokenByRefreshToken(refreshToken)
-		res.json({ success: true })
+		res.status(200).json({ success: true })
 	}
 }
 
