@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { wrapAsync } from '../../middlewares/error.middleware'
+import { wrapAsync } from '../../config/wrapAsync'
 import { upload } from '../../middlewares/multer.middleware'
 import { videoController } from './video.controller'
 export const videoRouter = new Router()

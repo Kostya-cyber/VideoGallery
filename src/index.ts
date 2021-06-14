@@ -7,7 +7,6 @@ import { authRouter } from './modules/auth/auth.routes'
 import { usersRouter } from './modules/user/user.routes'
 import { videoRouter } from './modules/video/video.routes'
 import { permissionRouter } from './modules/permission/permission.routes'
-import { errorHandler } from './middlewares/error.middleware'
 import { logger } from './config/logger'
 import { swaggerDocs } from './config/swagger'
 import * as swaggerUi from 'swagger-ui-express'
@@ -26,7 +25,9 @@ app.use(`/user`, usersRouter)
 app.use(`/video`, videoRouter)
 app.use(`/permission`, permissionRouter)
 
-app.use(errorHandler)
+app.use((err, req, res, next) => {
+	res.json(err)
+})
 
 app.listen(PORT, () => {
 	logger.info(`server started on port ${PORT}`)

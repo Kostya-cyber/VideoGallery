@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { wrapAsync } from '../../middlewares/error.middleware'
+import { wrapAsync } from '../../config/wrapAsync'
 import { userController } from './user.controller'
 export const usersRouter = new Router()
 

@@ -1,6 +1,6 @@
 import { NotFoundError } from '../../errors/NotFoundError'
-import { deleteFile } from '../../middlewares/fs.middleware'
 import { videoRepository } from './video.repository'
+import { unlink } from 'fs'
 
 class VideoService {
 	async createVideo(file) {
@@ -19,9 +19,15 @@ class VideoService {
 	}
 
 	async deleteVideoByFileName(fileName) {
+		this.deleteFile(fileName)
 		const video = await videoRepository.delete(fileName)
-		deleteFile(fileName)
 		return video
+	}
+
+	private deleteFile(fileName: string) {
+		unlink(__dirname + `/../../videos/` + fileName, (err) => {
+			if (err) throw err
+		})
 	}
 
 	async getAllVideos() {

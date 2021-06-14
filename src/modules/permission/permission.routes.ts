@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { wrapAsync } from '../../middlewares/error.middleware'
+import { wrapAsync } from '../../config/wrapAsync'
 import { permissionController } from './permission.controller'
 export const permissionRouter = Router()
 
