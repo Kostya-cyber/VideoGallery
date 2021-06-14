@@ -2,11 +2,12 @@
 	"name": "videogallery",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "./src/index.ts",
 	"scripts": {
 		"start": "node ./src/index.ts",
 		"dev": "nodemon ./src/index.ts",
-		"eslint": "eslint"
+		"eslint": "eslint src/",
+		"precommit": "lint-staged"
 	},
 	"author": "",
 	"license": "ISC",
@@ -22,6 +23,8 @@
 		"eslint-plugin-import": "^2.23.2",
 		"eslint-plugin-jsx-a11y": "^6.4.1",
 		"eslint-plugin-prettier": "^3.4.0",
+		"husky": "^6.0.0",
+		"lint-staged": "^11.0.0",
 		"nodemon": "^2.0.7",
 		"prettier": "^2.3.0",
 		"ts-node": "^9.1.1",
@@ -40,5 +43,12 @@
 		"swagger-ui-express": "^4.1.6",
 		"typeorm": "^0.2.32",
 		"winston": "^3.3.3"
-	}
+	},
+	"lint-staged": {
+		"*.ts": [
+		  "node_modules/.bin/eslint --max-warnings=0",
+		  "prettier --write",
+		  "git add ."
+		]
+	  }
 }

@@ -25,8 +25,9 @@ app.use(`/user`, usersRouter)
 app.use(`/video`, videoRouter)
 app.use(`/permission`, permissionRouter)
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err, req, res, next) => {
-	res.json(err)
+	res.status(err.status).json(err)
 })
 
 app.listen(PORT, () => {

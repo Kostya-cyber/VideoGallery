@@ -13,6 +13,7 @@
 	"rules": {
 		"indent": ["error", "tab"],
 		"quotes": ["error", "backtick", { "avoidEscape": false }],
-		"semi": ["error", "never"]
+		"semi": ["error", "never"],
+		"@typescript-eslint/no-unused-vars": "off"
 	}
 }
