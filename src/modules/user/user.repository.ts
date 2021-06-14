@@ -1,5 +1,5 @@
-import { dbManager } from "../../config/dbConnection"
-import { User } from "./user.model"
+import { dbManager } from '../../config/dbConnection'
+import { User } from './user.model'
 
 class UserRepository {
 	async findByLogin(login: string) {
@@ -18,12 +18,12 @@ class UserRepository {
 			.getMany()
 	}
 
-	async update(user: Partial<User>) {
+	async update(user: Partial<User>, login: string) {
 		return await dbManager
 			.createQueryBuilder()
 			.update(User)
 			.set(user)
-			.where(`login = :login`, { login: user.login })
+			.where(`login = :login`, { login })
 			.execute()
 	}
 

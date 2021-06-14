@@ -9,6 +9,8 @@ import { videoRouter } from './modules/video/video.routes'
 import { permissionRouter } from './modules/permission/permission.routes'
 import { errorHandler } from './middlewares/error.middleware'
 import { logger } from './config/logger'
+import { swaggerDocs } from './config/swagger'
+import * as swaggerUi from 'swagger-ui-express'
 
 const PORT = 8080
 
@@ -17,6 +19,7 @@ const app = express()
 app.use(cors())
 app.use(urlencoded({ extended: false }))
 app.use(json())
+app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.use(`/auth`, authRouter)
 app.use(`/user`, usersRouter)

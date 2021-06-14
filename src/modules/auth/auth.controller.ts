@@ -12,7 +12,7 @@ class AuthController {
 		)
 		const accessToken = authService.createAccessToken(candidate)
 		const refreshToken = await authService.createRefreshToken(candidate)
-		res.json({ accessToken, refreshToken })
+		res.status(200).json({ accessToken, refreshToken })
 	}
 	async register(req, res) {
 		const user = req.body
