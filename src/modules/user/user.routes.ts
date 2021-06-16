@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { wrapAsync } from '../../config/wrapAsync'
+import { LOGIN_URL } from './user.constants'
 import { userController } from './user.controller'
 export const usersRouter = new Router()
 
@@ -25,7 +26,7 @@ export const usersRouter = new Router()
  *          404:
  *              description: No such user
  */
-usersRouter.get(`/:login`, wrapAsync(userController.getUser))
+usersRouter.get(LOGIN_URL, wrapAsync(userController.getUser))
 /**
  * @swagger
  * /user/:
@@ -82,7 +83,7 @@ usersRouter.get(`/`, wrapAsync(userController.getUsers))
  *          409:
  *              description: This email is alredy in use
  */
-usersRouter.put(`/:login`, wrapAsync(userController.updateUser))
+usersRouter.put(LOGIN_URL, wrapAsync(userController.updateUser))
 /**
  * @swagger
  * /user/{login}:
@@ -103,4 +104,4 @@ usersRouter.put(`/:login`, wrapAsync(userController.updateUser))
  *          200:
  *              description: Success
  */
-usersRouter.delete(`/:login`, wrapAsync(userController.deleteUser))
+usersRouter.delete(LOGIN_URL, wrapAsync(userController.deleteUser))

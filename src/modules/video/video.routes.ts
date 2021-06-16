@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { wrapAsync } from '../../config/wrapAsync'
 import { upload } from '../../middlewares/multer.middleware'
+import { FILE_NAME_URL, ORIGINAL_NAME_URL } from './video.constants'
 import { videoController } from './video.controller'
 export const videoRouter = new Router()
 
@@ -21,7 +22,7 @@ videoRouter.get(`/`, wrapAsync(videoController.getVideos))
  *      tags:
  *          - video
  */
-videoRouter.get(`/:originalName`, wrapAsync(videoController.getVideo))
+videoRouter.get(ORIGINAL_NAME_URL, wrapAsync(videoController.getVideo))
 /**
  * @swagger
  * /video/:
@@ -43,4 +44,4 @@ videoRouter.post(
  *      tags:
  *          - video
  */
-videoRouter.delete(`/:fileName`, wrapAsync(videoController.deleteVideo))
+videoRouter.delete(FILE_NAME_URL, wrapAsync(videoController.deleteVideo))

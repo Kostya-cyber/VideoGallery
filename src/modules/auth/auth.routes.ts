@@ -1,5 +1,11 @@
 import { Router } from 'express'
 import { wrapAsync } from '../../config/wrapAsync'
+import {
+	LOGOUT_URL,
+	REFRESH_TOKENTS_URL,
+	SIGN_IN_URL,
+	SIGN_UP_URL,
+} from './auth.constants'
 import { authController } from './auth.controller'
 export const authRouter = new Router()
 
@@ -38,7 +44,7 @@ export const authRouter = new Router()
  *       401:
  *         description: Invalid password
  */
-authRouter.post(`/sign-in`, wrapAsync(authController.authenticate))
+authRouter.post(SIGN_IN_URL, wrapAsync(authController.authenticate))
 /**
  * @swagger
  * /auth/sign-up:
@@ -72,7 +78,7 @@ authRouter.post(`/sign-in`, wrapAsync(authController.authenticate))
  *       409:
  *         description: This email is alredy in use
  */
-authRouter.post(`/sign-up`, wrapAsync(authController.register))
+authRouter.post(SIGN_UP_URL, wrapAsync(authController.register))
 /**
  * @swagger
  * /auth/refresh-tokens:
@@ -105,7 +111,7 @@ authRouter.post(`/sign-up`, wrapAsync(authController.register))
  *       409:
  *         description: Token expired
  */
-authRouter.post(`/refresh-tokens`, wrapAsync(authController.refreshTokens))
+authRouter.post(REFRESH_TOKENTS_URL, wrapAsync(authController.refreshTokens))
 /**
  * @swagger
  * /auth/logout:
@@ -136,4 +142,4 @@ authRouter.post(`/refresh-tokens`, wrapAsync(authController.refreshTokens))
  *       401:
  *         description: Unauthorized
  */
-authRouter.delete(`/logout`, wrapAsync(authController.logout))
+authRouter.delete(LOGOUT_URL, wrapAsync(authController.logout))

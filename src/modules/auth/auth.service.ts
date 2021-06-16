@@ -1,5 +1,5 @@
+import * as crypto from 'crypto'
 import * as jwt from 'jsonwebtoken'
-import * as bcryptjs from 'bcryptjs'
 import { User } from '../user/user.model'
 import { authRepository } from './auth.repository'
 import { RefreshSession } from './token.model'
@@ -34,10 +34,13 @@ class AuthService {
 	}
 
 	getUserWithHashPassword(user: Partial<User>) {
-		const salt = bcryptjs.genSaltSync(10)
+		const salt = crypto.randomBytes(16).toString(`hex`)
 		return new User({
 			login: user.login,
-			password: bcryptjs.hashSync(user.password, salt),
+			password: crypto
+				.pbkdf2Sync(user.password, salt, 1000, 64, `sha512`)
+				.toString(`hex`),
+			salt,
 		})
 	}
 

@@ -1,4 +1,4 @@
-import * as bcryptjs from 'bcryptjs'
+import * as crypto from 'crypto'
 import { ConflictError } from '../../errors/ConflictError'
 import { UnauthorizedError } from '../../errors/UnauthorizedError'
 import { NotFoundError } from '../../errors/NotFoundError'
@@ -12,10 +12,22 @@ class UserService {
 		if (!candidate) {
 			throw new NotFoundError(`no such user`)
 		}
-		if (!bcryptjs.compareSync(password, candidate.password)) {
+		if (this.validPassword(password, candidate.salt, candidate.password)) {
 			throw new UnauthorizedError(`Invalid password`)
 		}
 		return candidate
+	}
+
+	validPassword(
+		password: string,
+		candidateSalt: string,
+		candidatePassword: string
+	) {
+		return (
+			crypto
+				.pbkdf2Sync(password, candidateSalt, 1000, 64, `sha512`)
+				.toString(`hex`) !== candidatePassword
+		)
 	}
 
 	async getUserByLogin(login: string) {

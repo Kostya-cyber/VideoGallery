@@ -21,6 +21,9 @@ export class User {
 	@Column(`varchar`, { length: 255, nullable: false })
 	password: string
 
+	@Column(`varchar`, { length: 255, nullable: false })
+	salt: string
+
 	@OneToMany(() => Permission, (permission) => permission.user)
 	permissions: Permission[]
 
