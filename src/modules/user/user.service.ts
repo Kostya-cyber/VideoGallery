@@ -55,7 +55,10 @@ class UserService {
 		if (candidate) {
 			throw new ConflictError(`this email is alredy in use`)
 		}
-		const updateUser = authService.getUserWithHashPassword(user)
+		const updateUser = authService.getUserWithHashPassword(
+			user.login,
+			user.password
+		)
 		return await userRepository.update(updateUser, login)
 	}
 }

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { wrapAsync } from '../../config/wrapAsync'
+import { isAuth } from '../../middlewares/auth.middleware'
 import {
 	LOGOUT_URL,
 	REFRESH_TOKENTS_URL,
@@ -85,24 +86,13 @@ authRouter.post(SIGN_UP_URL, wrapAsync(authController.register))
  *  post:
  *     tags:
  *     - auth
- *     summary: Checks if the token is valid
+ *     summary: Refresh token
  *     description:
  *     operationId: refreshToken
  *     consumes:
  *     - application/json
  *     produces:
  *     - application/json
- *     parameters:
- *     - in: body
- *       name: body
- *       required: true
- *       schema:
- *          type: object
- *          required:
- *              - refreshToken
- *          properties:
- *              refreshToken:
- *                  type: string
  *     responses:
  *       200:
  *         description: Succes
@@ -125,21 +115,10 @@ authRouter.post(REFRESH_TOKENTS_URL, wrapAsync(authController.refreshTokens))
  *     - application/json
  *     produces:
  *     - application/json
- *     parameters:
- *     - in: body
- *       name: body
- *       required: true
- *       schema:
- *          type: object
- *          required:
- *              - refreshToken
- *          properties:
- *              refreshToken:
- *                  type: string
  *     responses:
  *       200:
  *         description: Succes
  *       401:
  *         description: Unauthorized
  */
-authRouter.delete(LOGOUT_URL, wrapAsync(authController.logout))
+authRouter.delete(LOGOUT_URL, isAuth, wrapAsync(authController.logout))

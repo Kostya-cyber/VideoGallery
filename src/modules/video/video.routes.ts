@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { wrapAsync } from '../../config/wrapAsync'
+import { isAuth } from '../../middlewares/auth.middleware'
 import { upload } from '../../middlewares/multer.middleware'
 import { FILE_NAME_URL, ORIGINAL_NAME_URL } from './video.constants'
 import { videoController } from './video.controller'
@@ -33,6 +34,7 @@ videoRouter.get(ORIGINAL_NAME_URL, wrapAsync(videoController.getVideo))
  */
 videoRouter.post(
 	`/`,
+	isAuth,
 	upload.single(`video`),
 	wrapAsync(videoController.createVideo)
 )
@@ -44,4 +46,8 @@ videoRouter.post(
  *      tags:
  *          - video
  */
-videoRouter.delete(FILE_NAME_URL, wrapAsync(videoController.deleteVideo))
+videoRouter.delete(
+	FILE_NAME_URL,
+	isAuth,
+	wrapAsync(videoController.deleteVideo)
+)

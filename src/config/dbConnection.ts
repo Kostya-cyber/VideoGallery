@@ -14,7 +14,7 @@ const getDatabaseConnection = async () => {
 
 export let dbConnection: Connection
 export let dbManager
-;(async () => {
+(async () => {
 	dbConnection = await getDatabaseConnection()
 	dbManager = dbConnection.manager
 })()

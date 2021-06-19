@@ -10,6 +10,10 @@ import { permissionRouter } from './modules/permission/permission.routes'
 import { logger } from './config/logger'
 import { swaggerDocs } from './config/swagger'
 import * as swaggerUi from 'swagger-ui-express'
+import { errorMiddleware } from './middlewares/error.middleware'
+import * as cookieParser from 'cookie-parser'
+import { UnauthorizedError } from './errors/UnauthorizedError'
+import { AppError } from './errors/AppError'
 
 const PORT = 8080
 
@@ -18,6 +22,7 @@ const app = express()
 app.use(cors())
 app.use(urlencoded({ extended: false }))
 app.use(json())
+app.use(cookieParser())
 app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.use(`/auth`, authRouter)
@@ -25,9 +30,7 @@ app.use(`/user`, usersRouter)
 app.use(`/video`, videoRouter)
 app.use(`/permission`, permissionRouter)
 
-app.use((err, req, res, next) => {
-	res.status(err.status).json(err)
-})
+app.use(errorMiddleware)
 
 app.listen(PORT, () => {
 	logger.info(`server started on port ${PORT}`)

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { wrapAsync } from '../../config/wrapAsync'
+import { isAuth } from '../../middlewares/auth.middleware'
 import { LOGIN_URL } from './user.constants'
 import { userController } from './user.controller'
 export const usersRouter = new Router()
@@ -26,7 +27,7 @@ export const usersRouter = new Router()
  *          404:
  *              description: No such user
  */
-usersRouter.get(LOGIN_URL, wrapAsync(userController.getUser))
+usersRouter.get(LOGIN_URL, isAuth, wrapAsync(userController.getUser))
 /**
  * @swagger
  * /user/:
@@ -44,7 +45,7 @@ usersRouter.get(LOGIN_URL, wrapAsync(userController.getUser))
  *          404:
  *              description: No users
  */
-usersRouter.get(`/`, wrapAsync(userController.getUsers))
+usersRouter.get(`/`, isAuth, wrapAsync(userController.getUsers))
 /**
  * @swagger
  * /user/{login}:
@@ -83,7 +84,7 @@ usersRouter.get(`/`, wrapAsync(userController.getUsers))
  *          409:
  *              description: This email is alredy in use
  */
-usersRouter.put(LOGIN_URL, wrapAsync(userController.updateUser))
+usersRouter.put(LOGIN_URL, isAuth, wrapAsync(userController.updateUser))
 /**
  * @swagger
  * /user/{login}:
@@ -104,4 +105,4 @@ usersRouter.put(LOGIN_URL, wrapAsync(userController.updateUser))
  *          200:
  *              description: Success
  */
-usersRouter.delete(LOGIN_URL, wrapAsync(userController.deleteUser))
+usersRouter.delete(LOGIN_URL, isAuth, wrapAsync(userController.deleteUser))

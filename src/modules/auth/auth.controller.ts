@@ -1,44 +1,38 @@
-import { ConflictError } from '../../errors/ConflictError'
-import { NotFoundError } from '../../errors/NotFoundError'
 import { authService } from './auth.service'
-import { userService } from '../user/user.service'
 
 class AuthController {
 	async authenticate(req, res) {
-		const user = req.body
-		const candidate = await userService.getUserByLoginAndPassword(
-			user.login,
-			user.password
-		)
-		const accessToken = authService.createAccessToken(candidate)
-		const refreshToken = await authService.createRefreshToken(candidate)
-		res.status(200).json({ success: true, accessToken, refreshToken })
+		const { login, password } = req.body
+		const userData = await authService.authentication(login, password)
+		res.cookie(`refreshToken`, userData.refreshToken, {
+			maxAge: 30 * 24 * 60 * 60 * 1000,
+			httpOnly: true,
+		})
+		res.status(200).json({ success: true, ...userData })
 	}
 	async register(req, res) {
-		const user = req.body
-		const candidate = await userService.getUserByLogin(user.login)
-		if (candidate) {
-			throw new ConflictError(`this email is alredy in use`)
-		}
-		const newUser = authService.getUserWithHashPassword(user)
-		await userService.saveUser(newUser)
-		const accessToken = authService.createAccessToken(newUser)
-		const refreshToken = await authService.createRefreshToken(newUser)
-		res.status(200).json({ success: true, accessToken, refreshToken })
+		const { login, password } = req.body
+		const userData = await authService.registration(login, password)
+		res.cookie(`refreshToken`, userData.refreshToken, {
+			maxAge: 30 * 24 * 60 * 60 * 1000,
+			httpOnly: true,
+		})
+		res.status(200).json({ success: true, ...userData })
 	}
 	async refreshTokens(req, res) {
-		const { refreshToken } = req.body
-		if (!refreshToken) {
-			throw new NotFoundError(`Access denied, token missing!`)
-		}
-		const token = await authService.getTokenByRefreshToken(refreshToken)
-		const accessToken = authService.getAccessTokenByRefresh(token)
-		res.status(200).json({ success: true, accessToken })
+		const { refreshToken } = req.cookies
+		const userData = await authService.refresh(refreshToken)
+		res.cookie(`refreshToken`, userData.refreshToken, {
+			maxAge: 30 * 24 * 60 * 60 * 1000,
+			httpOnly: true,
+		})
+		res.status(200).json({ success: true, ...userData })
 	}
 
 	async logout(req, res) {
-		const { refreshToken } = req.body
-		await authService.deleteTokenByRefreshToken(refreshToken)
+		const { refreshToken } = req.cookies
+		await authService.logout(refreshToken)
+		res.clearCookie(`refreshToken`)
 		res.status(200).json({ success: true })
 	}
 }
