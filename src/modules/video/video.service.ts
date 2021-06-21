@@ -18,7 +18,7 @@ class VideoService {
 				user.id
 			)
 			if (videos.length === 0) {
-				throw new NotFoundError(`no such video`)
+				throw new NotFoundError(`no such videos`)
 			}
 			return videos
 		} else {
@@ -26,7 +26,7 @@ class VideoService {
 				originalName
 			)
 			if (videos.length === 0) {
-				throw new NotFoundError(`no such video`)
+				throw new NotFoundError(`no such videos`)
 			}
 			return videos
 		}
@@ -48,13 +48,13 @@ class VideoService {
 		if (user) {
 			const videos = await videoRepository.getAllVideosForAuth(user.id)
 			if (videos.length === 0) {
-				throw new NotFoundError(`no such video`)
+				throw new NotFoundError(`no such videos`)
 			}
 			return videos
 		} else {
 			const videos = await videoRepository.getAllVideosForUnauth()
 			if (videos.length === 0) {
-				throw new NotFoundError(`no such video`)
+				throw new NotFoundError(`no such videos`)
 			}
 			return videos
 		}

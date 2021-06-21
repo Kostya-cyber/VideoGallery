@@ -1,3 +1,4 @@
+import { ForbiddenError } from '../../errors/ForbiddenError'
 import { permissionService } from '../permission/permission.service'
 import { videoService } from './video.service'
 
@@ -23,13 +24,12 @@ class VideoController {
 			await videoService.deleteVideoByFileName(fileName)
 			res.json({ success: true })
 		} else {
-			res.json({
-				success: false,
-				message: `you do not have permission to delete this video`,
-			})
+			throw new ForbiddenError(
+				`You do not have sufficient rights to delete this video`
+			)
 		}
 	}
-	async getVideo(req, res) {
+	async getAllVideosByOriginalName(req, res) {
 		const { originalName } = req.params
 		const authorizationHeader = req.headers.authorization
 		const user = videoService.checkAuthUser(authorizationHeader)
@@ -39,7 +39,7 @@ class VideoController {
 		)
 		res.json({ success: true, videos })
 	}
-	async getVideos(req, res) {
+	async getAllVideos(req, res) {
 		const authorizationHeader = req.headers.authorization
 		const user = videoService.checkAuthUser(authorizationHeader)
 		const videos = await videoService.getAllVideos(user)

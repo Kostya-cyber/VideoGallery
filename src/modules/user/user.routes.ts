@@ -52,7 +52,7 @@ usersRouter.get(`/`, isAuth, wrapAsync(userController.getUsers))
  *  put:
  *      tags:
  *      - user
- *      summary: Update existing user
+ *      summary: Editing an authorized user
  *      description:
  *      oparetionId: updateUser
  *      consumes:
@@ -60,11 +60,6 @@ usersRouter.get(`/`, isAuth, wrapAsync(userController.getUsers))
  *      produces:
  *      - application/json
  *      parameters:
- *      - name: login
- *        in: path
- *        description: login user
- *        required: true
- *        type: string
  *      - in: body
  *        name: body
  *        required: true
@@ -87,22 +82,17 @@ usersRouter.get(`/`, isAuth, wrapAsync(userController.getUsers))
 usersRouter.put(LOGIN_URL, isAuth, wrapAsync(userController.updateUser))
 /**
  * @swagger
- * /user/{login}:
+ * /user/:
  *  delete:
  *      tags:
  *          - user
- *      summary: Delete user by login
+ *      summary: Delete and logout of the currently logged in user
  *      oparetionId: deleteUser
  *      produces:
  *          - application/json
- *      parameters:
- *      - name: login
- *        in: path
- *        description: login user
- *        required: true
- *        type: string
+ *      parameters: []
  *      responses:
  *          200:
  *              description: Success
  */
-usersRouter.delete(LOGIN_URL, isAuth, wrapAsync(userController.deleteUser))
+usersRouter.delete(`/`, isAuth, wrapAsync(userController.deleteUser))

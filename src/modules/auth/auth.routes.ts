@@ -86,7 +86,7 @@ authRouter.post(SIGN_UP_URL, wrapAsync(authController.register))
  *  post:
  *     tags:
  *     - auth
- *     summary: Refresh token
+ *     summary: Refresh tokens
  *     description:
  *     operationId: refreshToken
  *     consumes:
@@ -94,12 +94,10 @@ authRouter.post(SIGN_UP_URL, wrapAsync(authController.register))
  *     produces:
  *     - application/json
  *     responses:
- *       200:
+ *      200:
  *         description: Succes
- *       404:
- *         description: Access denied, token missing
- *       409:
- *         description: Token expired
+ *      401:
+ *         description: Unauthorized
  */
 authRouter.post(REFRESH_TOKENTS_URL, wrapAsync(authController.refreshTokens))
 /**
