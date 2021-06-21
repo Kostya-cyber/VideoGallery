@@ -12,8 +12,6 @@ import { swaggerDocs } from './config/swagger'
 import * as swaggerUi from 'swagger-ui-express'
 import { errorMiddleware } from './middlewares/error.middleware'
 import * as cookieParser from 'cookie-parser'
-import { UnauthorizedError } from './errors/UnauthorizedError'
-import { AppError } from './errors/AppError'
 
 const PORT = 8080
 

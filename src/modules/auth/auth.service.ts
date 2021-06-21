@@ -15,7 +15,7 @@ class AuthService {
 			throw new ConflictError(`this email is alredy in use`)
 		}
 		const newUser = authService.getUserWithHashPassword(login, password)
-		await userService.saveUser(newUser)
+		await userRepository.save(newUser)
 		const accessToken = authService.createAccessToken(newUser)
 		const refreshToken = await authService.createRefreshToken(newUser)
 		await authRepository.save(
@@ -55,7 +55,7 @@ class AuthService {
 		return { user, accessToken, refreshToken: newRefreshToken }
 	}
 
-	async logout(refreshToken) {
+	async logout(refreshToken: string) {
 		const refreshSession = await authRepository.getToken(refreshToken)
 		if (!refreshSession) {
 			throw new UnauthorizedError(`Unauthorized`)
@@ -77,7 +77,7 @@ class AuthService {
 			{ expiresIn: process.env.JWT_ACCESS_TIME }
 		)
 	}
-	async createRefreshToken(user: User) {
+	createRefreshToken(user: User) {
 		return jwt.sign(
 			{
 				id: user.id,

@@ -3,15 +3,11 @@ import { ConflictError } from '../../errors/ConflictError'
 import { UnauthorizedError } from '../../errors/UnauthorizedError'
 import { NotFoundError } from '../../errors/NotFoundError'
 import { authService } from '../auth/auth.service'
-import { User } from './user.model'
 import { userRepository } from './user.repository'
 
 class UserService {
 	async getUserByLoginAndPassword(login: string, password: string) {
 		const candidate = await this.getUserByLogin(login)
-		if (!candidate) {
-			throw new NotFoundError(`no such user`)
-		}
 		if (this.validPassword(password, candidate.salt, candidate.password)) {
 			throw new UnauthorizedError(`Invalid password`)
 		}
@@ -31,11 +27,11 @@ class UserService {
 	}
 
 	async getUserByLogin(login: string) {
-		return await userRepository.findByLogin(login)
-	}
-
-	async saveUser(user: User) {
-		await userRepository.save(user)
+		const user = await userRepository.findByLogin(login)
+		if (!user) {
+			throw new NotFoundError(`No such user`)
+		}
+		return user
 	}
 
 	async getAllUsers() {
@@ -50,16 +46,13 @@ class UserService {
 		await userRepository.delete(login)
 	}
 
-	async updateUser(user: Partial<User>, login: string) {
-		const candidate = await userService.getUserByLogin(user.login)
+	async updateUser(login: string, password: string, userLogin: string) {
+		const candidate = await userRepository.findByLogin(login)
 		if (candidate) {
 			throw new ConflictError(`this email is alredy in use`)
 		}
-		const updateUser = authService.getUserWithHashPassword(
-			user.login,
-			user.password
-		)
-		return await userRepository.update(updateUser, login)
+		const updateUser = authService.getUserWithHashPassword(login, password)
+		return await userRepository.update(updateUser, userLogin)
 	}
 }
 

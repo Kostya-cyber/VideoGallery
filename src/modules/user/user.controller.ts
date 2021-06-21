@@ -1,12 +1,10 @@
-import { NotFoundError } from '../../errors/NotFoundError'
+import { authService } from '../auth/auth.service'
 import { userService } from './user.service'
 
 class UserController {
 	async getUser(req, res) {
-		const user = await userService.getUserByLogin(req.params.login)
-		if (!user) {
-			throw new NotFoundError(`No such user`)
-		}
+		const { login } = req.params
+		const user = await userService.getUserByLogin(login)
 		res.status(200).json(user)
 	}
 	async getUsers(req, res) {
@@ -14,12 +12,17 @@ class UserController {
 		res.status(200).json(users)
 	}
 	async updateUser(req, res) {
-		const user = req.body
-		const updateUser = await userService.updateUser(user, req.params.login)
+		const { login, password } = req.body
+		const { login: userLogin } = req.user
+		const updateUser = await userService.updateUser(login, password, userLogin)
 		res.status(200).json({ succes: true, updateUser })
 	}
 	async deleteUser(req, res) {
-		await userService.deleteUserByLogin(req.params.login)
+		const { login } = req.user
+		const { refreshToken } = req.cookies
+		await userService.deleteUserByLogin(login)
+		await authService.logout(refreshToken)
+		res.clearCookie(`refreshToken`)
 		res.status(200).json({ success: true })
 	}
 }

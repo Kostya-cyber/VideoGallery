@@ -1,3 +1,4 @@
+import { Brackets } from 'typeorm'
 import { dbManager } from '../../config/dbConnection'
 import { Video } from './video.model'
 
@@ -20,21 +21,85 @@ class VideoRepository {
 			.execute()
 	}
 
-	async findByOriginalName(originalName: string) {
+	async getById(id: string) {
+		return await dbManager.findOne(Video, { id })
+	}
+
+	async findByFileName(fileName: string) {
+		return await dbManager.findOne(Video, { fileName })
+	}
+
+	async getAllVideosForUnauth() {
 		return await dbManager
-			.createQueryBuilder()
-			.select(`video`)
-			.from(Video, `video`)
-			.where(`video.original_name = :originalName`, { originalName })
+			.createQueryBuilder(Video, `video`)
+			.innerJoin(`video.permissions`, `permission`)
+			.where(`operation_type = :operation`, { operation: `READ_ALL` })
+			.groupBy(`video.id`)
 			.getMany()
 	}
 
-	async getAll() {
+	async getAllVideosForAuth(id: string) {
 		return await dbManager
-			.createQueryBuilder()
-			.select(`video`)
-			.from(Video, `video`)
+			.createQueryBuilder(Video, `video`)
+			.innerJoin(`video.permissions`, `permission`)
+			.where(`operation_type = 'READ_ALL' or operation_type = 'READ_USER'`)
+			.orWhere(
+				`user_id = :id and (operation_type = 'READ_ADMIN' or operation_type = 'READ_CHOSEN')`,
+				{ id }
+			)
+			.groupBy(`video.id`)
 			.getMany()
+	}
+
+	async findByOriginalNameUnauth(originalName: string) {
+		return await dbManager
+			.createQueryBuilder(Video, `video`)
+			.innerJoin(`video.permissions`, `permission`)
+			.where(`operation_type = :operation`, { operation: `READ_ALL` })
+			.andWhere(`original_name = :originalName`, { originalName })
+			.groupBy(`video.id`)
+			.getMany()
+	}
+	async findByOriginalNameAuth(originalName: string, id: string) {
+		return await dbManager
+			.createQueryBuilder(Video, `video`)
+			.innerJoin(`video.permissions`, `permission`)
+			.where(`original_name = :originalName`, { originalName })
+			.andWhere(
+				new Brackets((qb) => {
+					qb.where(
+						`operation_type = 'READ_ALL' or operation_type = 'READ_USER'`
+					).orWhere(
+						`user_id = :id and (operation_type = 'READ_ADMIN' or operation_type = 'READ_CHOSEN')`,
+						{ id }
+					)
+				})
+			)
+			.groupBy(`video.id`)
+			.getMany()
+	}
+
+	async checkCreator(fileName: string, id: string) {
+		const result = await dbManager
+			.createQueryBuilder(Video, `video`)
+			.innerJoinAndSelect(`video.permissions`, `permission`)
+			.where((qb) => {
+				const subQuery = qb
+					.subQuery()
+					.select(`video.id`)
+					.from(Video, `video`)
+					.innerJoin(`video.permissions`, `permission`)
+					.where(
+						`permission.user_id = :id and permission.full_access = true`,
+						{
+							id,
+						}
+					)
+					.getQuery()
+				return `permission.video_id IN ` + subQuery
+			})
+			.getMany()
+		return result.length !== 0
 	}
 }
 

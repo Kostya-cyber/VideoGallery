@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { wrapAsync } from '../../config/wrapAsync'
+import { isAuth } from '../../middlewares/auth.middleware'
 import { permissionController } from './permission.controller'
 export const permissionRouter = Router()
 
@@ -11,7 +12,7 @@ export const permissionRouter = Router()
  *      tags:
  *          - permission
  */
-permissionRouter.get(`/`, wrapAsync(permissionController))
+permissionRouter.get(`/`, isAuth, wrapAsync(permissionController.getPermission))
 /**
  * @swagger
  * /permission/:
@@ -20,7 +21,11 @@ permissionRouter.get(`/`, wrapAsync(permissionController))
  *      tags:
  *          - permission
  */
-permissionRouter.post(`/`, wrapAsync(permissionController))
+permissionRouter.post(
+	`/`,
+	isAuth,
+	wrapAsync(permissionController.createPermission)
+)
 /**
  * @swagger
  * /permission/:
@@ -29,7 +34,7 @@ permissionRouter.post(`/`, wrapAsync(permissionController))
  *      tags:
  *          - permission
  */
-permissionRouter.put(`/`, wrapAsync(permissionController))
+// permissionRouter.put(`/`, isAuth, wrapAsync(permissionController.updatePermission))
 /**
  * @swagger
  * /permission/:
@@ -38,4 +43,4 @@ permissionRouter.put(`/`, wrapAsync(permissionController))
  *      tags:
  *          - permission
  */
-permissionRouter.delete(`/:`, wrapAsync(permissionController))
+//permissionRouter.delete(`/:`, isAuth, wrapAsync(permissionController.deletePermission))

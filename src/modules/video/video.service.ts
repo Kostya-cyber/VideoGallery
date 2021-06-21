@@ -1,6 +1,7 @@
 import { NotFoundError } from '../../errors/NotFoundError'
 import { videoRepository } from './video.repository'
 import { unlink } from 'fs'
+import { checkAuth } from '../../middlewares/auth.middleware'
 
 class VideoService {
 	async createVideo(file) {
@@ -10,12 +11,25 @@ class VideoService {
 		})
 	}
 
-	async getVideosByOriginalName(originalName) {
-		const videos = await videoRepository.findByOriginalName(originalName)
-		if (videos.length === 0) {
-			throw new NotFoundError(`no such video`)
+	async getVideosByOriginalName(originalName: string, user) {
+		if (user) {
+			const videos = await videoRepository.findByOriginalNameAuth(
+				originalName,
+				user.id
+			)
+			if (videos.length === 0) {
+				throw new NotFoundError(`no such video`)
+			}
+			return videos
+		} else {
+			const videos = await videoRepository.findByOriginalNameUnauth(
+				originalName
+			)
+			if (videos.length === 0) {
+				throw new NotFoundError(`no such video`)
+			}
+			return videos
 		}
-		return videos
 	}
 
 	async deleteVideoByFileName(fileName) {
@@ -25,17 +39,39 @@ class VideoService {
 	}
 
 	private deleteFile(fileName: string) {
-		unlink(__dirname + `/../../videos/` + fileName, (err) => {
+		unlink(__dirname + `/../../../videos/` + fileName, (err) => {
 			if (err) throw err
 		})
 	}
 
-	async getAllVideos() {
-		const videos = await videoRepository.getAll()
-		if (videos.length === 0) {
-			throw new NotFoundError(`no such video`)
+	async getAllVideos(user) {
+		if (user) {
+			const videos = await videoRepository.getAllVideosForAuth(user.id)
+			if (videos.length === 0) {
+				throw new NotFoundError(`no such video`)
+			}
+			return videos
+		} else {
+			const videos = await videoRepository.getAllVideosForUnauth()
+			if (videos.length === 0) {
+				throw new NotFoundError(`no such video`)
+			}
+			return videos
 		}
-		return videos
+	}
+
+	checkAuthUser(authorizationHeader: string) {
+		let user
+		try {
+			user = checkAuth(authorizationHeader)
+		} catch (err) {
+			user = null
+		}
+		return user
+	}
+
+	async checkCreator(fileName: string, id: string) {
+		return await videoRepository.checkCreator(fileName, id)
 	}
 }
 

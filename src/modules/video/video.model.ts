@@ -23,7 +23,7 @@ export class Video {
 	originalName: string
 
 	@OneToMany(() => Permission, (permission) => permission.video)
-	permission: Permission[]
+	permissions: Permission[]
 
 	constructor(video: Partial<Video>) {
 		Object.assign(this, video)

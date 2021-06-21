@@ -105,7 +105,7 @@ authRouter.post(REFRESH_TOKENTS_URL, wrapAsync(authController.refreshTokens))
 /**
  * @swagger
  * /auth/logout:
- *  delete:
+ *  post:
  *     tags:
  *     - auth
  *     summary: Logout of the current user
@@ -121,4 +121,4 @@ authRouter.post(REFRESH_TOKENTS_URL, wrapAsync(authController.refreshTokens))
  *       401:
  *         description: Unauthorized
  */
-authRouter.delete(LOGOUT_URL, isAuth, wrapAsync(authController.logout))
+authRouter.post(LOGOUT_URL, isAuth, wrapAsync(authController.logout))

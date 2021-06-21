@@ -19,7 +19,11 @@ export class Permission {
 	@JoinColumn({ name: `user_id` })
 	user: User
 
-	@ManyToOne(() => Video, (video) => video.permission, { primary: true })
+	@ManyToOne(() => Video, (video) => video.permissions, { primary: true })
 	@JoinColumn({ name: `video_id` })
 	video: Video
+
+	constructor(permission: Partial<Permission>) {
+		Object.assign(this, permission)
+	}
 }

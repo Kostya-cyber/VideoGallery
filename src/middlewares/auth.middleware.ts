@@ -1,8 +1,7 @@
 import { UnauthorizedError } from '../errors/UnauthorizedError'
 import { authService } from '../modules/auth/auth.service'
 
-export const isAuth = (req, res, next) => {
-	const authorizationHeader = req.headers.authorization
+export const checkAuth = (authorizationHeader: string) => {
 	if (!authorizationHeader) {
 		throw new UnauthorizedError(`Unauthorized`)
 	}
@@ -14,6 +13,11 @@ export const isAuth = (req, res, next) => {
 	if (!userData) {
 		throw new UnauthorizedError(`Unauthorized`)
 	}
-	req.user = userData
+	return userData
+}
+
+export const isAuth = (req, res, next) => {
+	const authorizationHeader = req.headers.authorization
+	req.user = checkAuth(authorizationHeader)
 	next()
 }
