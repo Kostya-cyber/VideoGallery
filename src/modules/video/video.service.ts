@@ -2,6 +2,7 @@ import { NotFoundError } from '../../errors/NotFoundError'
 import { videoRepository } from './video.repository'
 import { unlink } from 'fs'
 import { checkAuth } from '../../middlewares/auth.middleware'
+import { Video } from './video.model'
 
 class VideoService {
 	async createVideo(file) {
@@ -72,6 +73,22 @@ class VideoService {
 
 	async checkCreator(fileName: string, id: string) {
 		return await videoRepository.checkCreator(fileName, id)
+	}
+
+	async deleteAllVideosUser(videos: Array<Video>) {
+		const fileNameVideos = videos.map((p) => p.fileName)
+		for (const fileName of fileNameVideos) {
+			this.deleteFile(fileName)
+		}
+		const idVidoes = videos.map((p) => p.id)
+		if (idVidoes.length !== 0) {
+			return await videoRepository.deleteAllVideoByUserId(idVidoes)
+		}
+		return null
+	}
+
+	async getAllVideosUser(userId: string) {
+		return await videoRepository.getAllVideosUser(userId)
 	}
 }
 

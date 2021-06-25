@@ -1,3 +1,4 @@
+import { SubjectRemovedAndUpdatedError } from 'typeorm'
 import { dbManager } from '../../config/dbConnection'
 import { Video } from '../video/video.model'
 import { Permission } from './permission.model'
@@ -32,6 +33,27 @@ class PermissionRepository {
 			})
 			.getMany()
 		return result
+	}
+
+	async checkAccessRights(userId: string, videoId: string) {
+		const result = await dbManager
+			.createQueryBuilder(Video, `video`)
+			.innerJoinAndSelect(`video.permissions`, `permission`)
+			.where(
+				`permission.user_id = :userId and permission.video_id = :videoId and permission.full_access = true`,
+				{ userId, videoId }
+			)
+			.getOne()
+		return result
+	}
+
+	async deleteAllPermissionsByVideos(videos: Array<string>) {
+		return await dbManager
+			.createQueryBuilder()
+			.delete()
+			.from(Permission)
+			.where(`video_id IN (:...videos)`, { videos })
+			.execute()
 	}
 }
 

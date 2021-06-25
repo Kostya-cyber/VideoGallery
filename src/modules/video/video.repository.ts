@@ -90,16 +90,37 @@ class VideoRepository {
 					.from(Video, `video`)
 					.innerJoin(`video.permissions`, `permission`)
 					.where(
-						`permission.user_id = :id and permission.full_access = true`,
+						`permission.user_id = :id and permission.full_access = true and video.file_name = :fileName`,
 						{
 							id,
+							fileName,
 						}
 					)
 					.getQuery()
 				return `permission.video_id IN ` + subQuery
 			})
-			.getMany()
+			.getOne()
 		return result.length !== 0
+	}
+
+	async deleteAllVideoByUserId(videos: Array<string>) {
+		return await dbManager
+			.createQueryBuilder(Video, `video`)
+			.delete()
+			.from(Video)
+			.where(`id IN (:...videos)`, { videos })
+			.execute()
+	}
+
+	async getAllVideosUser(userId: string) {
+		return await dbManager
+			.createQueryBuilder(Video, `video`)
+			.innerJoin(`video.permissions`, `permission`)
+			.where(
+				`permission.user_id = :userId and permission.full_access = true and permission.operation_type IN ('READ_ALL', 'READ_USER', 'READ_ADMIN')`,
+				{ userId }
+			)
+			.getMany()
 	}
 }
 

@@ -4,3 +4,4 @@ node_modules
 videos
 combined.log
 error.log
+postgres.session.sql

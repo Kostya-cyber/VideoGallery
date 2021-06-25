@@ -1,4 +1,5 @@
 import { userRepository } from '../user/user.repository'
+import { Video } from '../video/video.model'
 import { videoRepository } from '../video/video.repository'
 import { Permission } from './permission.model'
 import { permissionRepository } from './permission.repository'
@@ -23,9 +24,21 @@ class PermissionService {
 		await permissionRepository.delete(video.id)
 	}
 
-	async getAllPermissoins(id: string) {
+	async getAllPermissions(id: string) {
 		const permissions = await permissionRepository.getAll(id)
 		return permissions
+	}
+
+	async checkAccessRights(userId: string, videoId: string) {
+		return await permissionRepository.checkAccessRights(userId, videoId)
+	}
+
+	async deleteAllPermissionsByVideos(videos: Array<Video>) {
+		const ids = videos.map((p) => p.id)
+		if (ids.length !== 0) {
+			return await permissionRepository.deleteAllPermissionsByVideos(ids)
+		}
+		return null
 	}
 }
 

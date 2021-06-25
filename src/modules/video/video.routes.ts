@@ -74,7 +74,6 @@ videoRouter.get(
  *         enum:
  *         - READ_ALL
  *         - READ_USER
- *         - READ_CHOSEN
  *         - READ_ADMIN
  *         default: "READ_ALL"
  *       collectionFormat: "multi"

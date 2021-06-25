@@ -1,4 +1,6 @@
 import { authService } from '../auth/auth.service'
+import { permissionService } from '../permission/permission.service'
+import { videoService } from '../video/video.service'
 import { userService } from './user.service'
 
 class UserController {
@@ -18,10 +20,13 @@ class UserController {
 		res.status(200).json({ succes: true, updateUser })
 	}
 	async deleteUser(req, res) {
-		const { login } = req.user
+		const { id, login } = req.user
 		const { refreshToken } = req.cookies
-		await userService.deleteUserByLogin(login)
+		const videos = await videoService.getAllVideosUser(id)
+		await permissionService.deleteAllPermissionsByVideos(videos)
+		await videoService.deleteAllVideosUser(videos)
 		await authService.logout(refreshToken)
+		await userService.deleteUserByLogin(login)
 		res.clearCookie(`refreshToken`)
 		res.status(200).json({ success: true })
 	}

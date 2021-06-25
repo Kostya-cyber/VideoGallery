@@ -4,6 +4,7 @@ import { videoService } from './video.service'
 
 class VideoController {
 	async createVideo(req, res) {
+		//add: indicate the tittle of the video
 		const file = req.file
 		const { id: userId } = req.user
 		const { operationType } = req.body
@@ -14,9 +15,15 @@ class VideoController {
 			true,
 			newVideo.raw[0].id
 		)
-		res.json({ success: true, ...newPermission })
+		res.status(200).json({ success: true, ...newPermission })
+	}
+
+	async updateVideo(req, res) {
+		//add: update the tittle of the video(and check for creator)
+		res.status(200).json({ success: true })
 	}
 	async deleteVideo(req, res) {
+		//fix: check access rights (checkCreator)
 		const { fileName } = req.params
 		const { id } = req.user
 		if (await videoService.checkCreator(fileName, id)) {
@@ -29,6 +36,16 @@ class VideoController {
 			)
 		}
 	}
+	async getAllUserVideos(req, res) {
+		//add: get all user videos
+		res.status(200).json({ success: true })
+	}
+
+	async getAllUserVideosByOriginalName(req, res) {
+		//add: get all user videos by original name
+		res.status(200).json({ success: true })
+	}
+
 	async getAllVideosByOriginalName(req, res) {
 		const { originalName } = req.params
 		const authorizationHeader = req.headers.authorization
@@ -37,13 +54,13 @@ class VideoController {
 			originalName,
 			user
 		)
-		res.json({ success: true, videos })
+		res.status(200).json({ success: true, videos })
 	}
 	async getAllVideos(req, res) {
 		const authorizationHeader = req.headers.authorization
 		const user = videoService.checkAuthUser(authorizationHeader)
 		const videos = await videoService.getAllVideos(user)
-		res.json({ success: true, videos })
+		res.status(200).json({ success: true, videos })
 	}
 }
 
